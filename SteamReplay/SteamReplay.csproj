@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Composition.AttributedModel" Version="*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ArchiSteamFarm">
+      <HintPath>..\..\ArchiSteamFarm-5.3.1.2\ArchiSteamFarm\bin\Debug\net6.0\ArchiSteamFarm.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
