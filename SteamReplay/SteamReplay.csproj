@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Composition.AttributedModel" Version="*" />
+    <PackageReference Include="AngleSharp" Version="*" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ArchiSteamFarm">

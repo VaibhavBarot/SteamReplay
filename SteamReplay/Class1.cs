@@ -8,7 +8,8 @@ using ArchiSteamFarm.Core;
 using System.Composition;
 using ArchiSteamFarm.Plugins.Interfaces;
 using ArchiSteamFarm.Steam;
-
+using ArchiSteamFarm.Web.Responses;
+using AngleSharp.Dom;
 
 namespace Replay.Replay
 {
@@ -57,8 +58,9 @@ namespace Replay.Replay
                 return Bot.Commands.FormatBotResponse(Strings.BotNotConnected);
             }
 
-            await CreateReplay(Bot).ConfigureAwait(false);
-
+            IDocument? htmlDocument = await CreateReplay(Bot).ConfigureAwait(false);
+            if (htmlDocument == null)
+                return Bot.Commands.FormatBotResponse(Strings.ErrorFailingRequest);
             return Bot.Commands.FormatBotResponse(Strings.Done);
         }
 
@@ -85,7 +87,7 @@ namespace Replay.Replay
             return responses.Count > 0 ? string.Join(Environment.NewLine, responses) : null;
         }
 
-        internal static async Task<bool> CreateReplay(Bot Bot)
+        internal static async Task<IDocument> CreateReplay(Bot Bot)
         {
 
             string profileURL = await Bot.ArchiWebHandler.GetAbsoluteProfileURL().ConfigureAwait(false);
@@ -94,15 +96,13 @@ namespace Replay.Replay
             {
                 Bot.ArchiLogger.LogGenericWarning(Strings.WarningFailed);
 
-                return false;
+                return null;
             }
 
 
             Uri request = new(SteamStoreURL + "/replay/" + Bot.SteamID+"/2022");
-            // Extra entry for sessionID
-            var response = await Bot.ArchiWebHandler.UrlGetToHtmlDocumentWithSession(request).ConfigureAwait(false);
-
-            return true;
+            HtmlDocumentResponse? response = await Bot.ArchiWebHandler.UrlGetToHtmlDocumentWithSession(request).ConfigureAwait(false);
+            return response?.Content;
         }
 
     }
